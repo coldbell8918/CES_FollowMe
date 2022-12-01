@@ -14,7 +14,8 @@ class human_tracker():
         self.subs2=[rospy.Subscriber('people_tracked', PersonArray, self.person_callback)]
         self.camera_id_none,self.lidar_id,self.stop =True,True,True
         self.camera_ok,self.lidar_ok=False,False
-
+        
+        self.track_id_save=None
         # self.pubs['cmd_vel'] = rospy.Publisher("cmd_vel", Twist,queue_size=1)
 
     def track_callback(self, data):
@@ -31,43 +32,50 @@ class human_tracker():
         merge=np.array(merge,dtype=object)
         merge=np.reshape(merge,(int(len(merge)/3),3))
 
-        # 
-        # if len(merge)!=0:
         if self.camera_id_none: 
             # self.camera_ok=False 
-            self.camera_track(merge)         
-            #print('no id')
+            self.camera_track(merge)
+            
+     
         else: 
             # self.camera_ok=True
             self.camera_cmd(merge)
-            # print('Camera Tracking')
-        # else:
-        #     print("None")
-        # self.lidarcamera()sdasdsadasd
+        # self.lidarcamera()
 
     def camera_track(self, list_):
         print("find id")
         if len(list_)!=0:
+            self.time_count=0
             axis_z_list=[list_[i][2][2] for i in range(len(list_))]
             min_dist=np.where(np.array(axis_z_list)-min(axis_z_list)==0)[0][0]
             self.target_c=list_[min_dist][1]
             self.camera_id_none=False
-            print(self.target_c)
-           
+            
+            
+            if self.time_count==0: 
+                self.track_id_save=[self.target_c]
+                print("robot's track_id is {}".format(self.track_id_save[0]))
+            self.time_count+=1
+            print(self.time_count)
         else: 
             self.target_c=None
             
 
     def camera_cmd(self, list_):
-        print("track id{}".format(self.target_c))
+        print("track id {}".format(self.track_id_save[0]))
         self.camera_mode=True
         id_list=[list_[i][1] for i in range(len(list_))]
 
-        if len(np.where(np.array(id_list)==self.target_c)[0])!=0: 
+        if len(np.where(np.array(id_list)==self.track_id_save)[0])!=0: 
             self.camera_mode=False
 
         else: 
             self.camera_id_none=True
+            if self.time_count==10: 
+                print('reset saved_track_id from {}'.format(self.track_id_save[0]))
+                self.track_id_save=[self.target_c]
+                
+                self.time_count==0
         
         if self.camera_mode: 
             self.camera_id_none=True
