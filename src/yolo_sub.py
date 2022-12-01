@@ -10,6 +10,7 @@ import time
 class human_tracker():
     def __init__(self):
         self.pubs=list()
+        self.cnt=0
         self.subs1=[rospy.Subscriber('tracker', track, self.track_callback)]
         self.subs2=[rospy.Subscriber('people_tracked', PersonArray, self.person_callback)]
         self.camera_id_none,self.lidar_id,self.stop =True,True,True
@@ -20,8 +21,6 @@ class human_tracker():
         # self.pubs['cmd_vel'] = rospy.Publisher("cmd_vel", Twist,queue_size=1)
 
     def track_callback(self, data):
-        
-
         axis,number,clss=data.axis,data.number,data.clss
         merge=list()
         for i in range(len(clss)):
@@ -63,6 +62,7 @@ class human_tracker():
         print(self.time_count)
 
     def camera_cmd(self, list_):
+<<<<<<< HEAD
         # print("track id {}".format(self.track_id_save[0]))
         self.camera_mode=True
         id_list=[list_[i][1] for i in range(len(list_))]
@@ -76,6 +76,25 @@ class human_tracker():
         if self.camera_mode: 
             self.camera_id_none=True
         
+=======
+        print("track id{}".format(self.target_c))
+        if self.cnt>1000:
+            self.cnt=0
+            self.camera_mode=True
+            id_list=[list_[i][1] for i in range(len(list_))]
+            if len(np.where(np.array(id_list)==self.target_c)[0])!=0: 
+                self.camera_mode=False
+
+            else: 
+                self.camera_id_none=True
+            
+            if self.camera_mode: 
+                self.camera_id_none=True
+        else:
+            self.camera_id_none=False
+        print(self.cnt)
+        self.cnt+=1
+>>>>>>> 12038934fd12ba40d5a232bc2311a07adec600fe
 
 
     def person_callback(self, data):
