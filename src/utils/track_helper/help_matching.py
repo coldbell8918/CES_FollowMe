@@ -1,7 +1,7 @@
 import numpy as np
 from .orb_provider import orb_match
 
-def matching_data(list_,target,target_img,imgs,length,type,const,sensor,match_ratio,match_type):
+def matching_data(list_,target_id,target,target_img,imgs,length,type,const,sensor,match_ratio,match_type):
     """
     Description: Find target data from list_ -> len : 0 means there is no matching data, 1 means find data ; index : target data's index from list_
     Args:
@@ -13,15 +13,15 @@ def matching_data(list_,target,target_img,imgs,length,type,const,sensor,match_ra
     return :  len, index
     """
 
-
     id_list=[list_[i][1] for i in range(len(list_))]
+
     if type=='id':
         id_list=[list_[i][1] for i in range(len(list_))]
-        check=np.where(np.array(id_list)==target)[0]
+        check=np.where(np.array(id_list)==target_id)[0]
         if length=='len':
             return len(check)
         elif length=='index':
-            return check
+            return list_[check[0]][1],list_[check[0]][2],check[0]
 
     elif type=='axis':
 
@@ -33,8 +33,9 @@ def matching_data(list_,target,target_img,imgs,length,type,const,sensor,match_ra
             match_count,distances=orb_match(target_img,imgs,match_ratio,match_type)
     
             norm=np.linalg.norm(axis_lists-target,axis=1)
-            calculate=np.min(distances*norm/match_count)
+            calculate=np.min(np.array(distances)/(np.array(match_count)))
             check=np.where(calculate)[0]
+            
             if check==[]:
                 if length=='len':
                     return 0
@@ -58,7 +59,7 @@ def matching_data(list_,target,target_img,imgs,length,type,const,sensor,match_ra
                 if length=='len':
                     return len(check)
                 elif length=='id_axis':
-                    return list_[check[0]][1],list_[check[0]][2]
+                    return list_[check[0]][1],list_[check[0]][2],check[0]
         
 
     
@@ -72,7 +73,7 @@ def cam_aov_check(target_id,target_axis,cam_aov):
     return :  target_id,target_axis
     """
     theta=np.arcsin(target_axis[0]/(target_axis[2]+0.0001)) ## x/depth #to prevent zero division +0.00001
-    if theta<(90-cam_aov/2) or theta>(cam_aov/2+90):
+    if theta.all()<(90-cam_aov/2) and theta.all()>(cam_aov/2+90):
         return None,None
     else:
         return target_id,target_axis

@@ -11,26 +11,26 @@ def config_maker(file_path):
     config = configparser.ConfigParser()
 
     config['upper count setting'] = {
-        'searching_cnt_lim': '2',
+        'searching_cnt_lim': '5',
     }
     config['lower count setting']={
-        'cnt': '20',
-        'cnt2': '20',
+        'cnt': '0',
+        'cnt2': '0',
     }
     config['lower distance setting']={
         'distance_lim' : '0',
     }
     config['track type setting']={
-        'type' : 'axis',
+        'type' : 'id',
     } 
     config['matching setting']={
         'matching const' : '2.0',
     }
     config['cmd setting']={
-        'max_linear const' : '1.0',
+        'max_linear const' : '0.5',
         'max_angular const' : '1.0',
         'angular const' : '0.8',
-        'linear const' :'0.2',
+        'linear const' :'0.1',
     }
     config['camera aov']={
         'angle of view' : '85',
@@ -39,7 +39,9 @@ def config_maker(file_path):
         'ratio' : '0.4',
         'match type': 'knnMatch',
     }
-    
+    config['init distance']={
+        'init_dis' : '1.0',
+    }
     with open(file_path , 'w') as f:
         config.write(f)
     return config 

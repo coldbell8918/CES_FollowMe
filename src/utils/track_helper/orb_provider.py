@@ -28,18 +28,17 @@ def orb_match(target_img,image_list,ratio,match_type):
                 matches = matcher.match(target_descriptors,image_descriptors)
             elif match_type=='knnMatch':
                 matches = matcher.knnMatch(target_descriptors, image_descriptors, 2)
-          
             try:
                 good_matches = [first for first,second in matches \
-                                    if first.distance < second.distance * ratio]
+                                    if first.distance < second.distance *1]
+                match_count.append(len(good_matches)+1) ## prevent zero division
+                dis=0
+                for i in good_matches:
+                    dis+=i.distance
+                distances.append(dis) 
             except:
-                pass
- 
-            match_count.append(len(good_matches)+1) ## prevent zero division
-            dis=0
-            for i in good_matches:
-                dis+=i.distance
-            distances.append(dis) 
+                match_count.append(1)
+                distances.append(100000)
         else:
             match_count.append(1)
             distances.append(100000)

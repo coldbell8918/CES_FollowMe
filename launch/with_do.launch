@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <arg name="tf_prefix"		value="$(env ROS_HOSTNAME)"/>
+
+  <group ns="$(arg tf_prefix)">
+    <!-- params -->
+    <param name="forest_file" value="$(find leg_tracker)/config/trained_leg_detector_res=0.33.yaml" />
+    <param name="scan_topic" value="scan" />
+    <param name="fixed_frame" value="$(arg tf_prefix)/base_scan"/>
+    <param name="scan_frequency" value="10"/>  
+    
+    <!-- run detect_leg_clusters -->  
+    <node pkg="leg_tracker" type="detect_leg_clusters" name="detect_leg_clusters" output="screen">
+      <param name="fixed_frame" value="$(arg tf_prefix)/base_scan"/>
+    </node>
+
+    <!-- run joint_leg_tracker -->
+    <node pkg="leg_tracker" type="joint_leg_tracker.py" name="joint_leg_tracker" output="screen">
+      <param name="fixed_frame" value="$(arg tf_prefix)/base_scan"/>
+    </node>
+
+ 
+    <!-- run local_occupancy_grid_mapping -->
+    <node pkg="leg_tracker" type="local_occupancy_grid_mapping" name="local_occupancy_grid_mapping" output="screen"> 
+      <param name="fixed_frame" value="$(arg tf_prefix)/base_scan"/>
+      <param name="base_frame"  value="$(arg tf_prefix)/base_link"/>
+    </node>
+
+    <include file="$(find track)/launch/follow_me.launch"/>
+    
+  </group>
+  
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find human_following)/rviz/r2.rviz"/>
+
+</launch>
+

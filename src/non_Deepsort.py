@@ -23,7 +23,7 @@ import numpy as np
 import sys
 import rospy
 import cv2
-from std_msgs.msg import Int64MultiArray
+from std_msgs.msg import Int64MultiArrayz
 
 # PyTorch
 # YoloV5-PyTorch
@@ -87,7 +87,6 @@ class YoloV5:
         set_logging()
         # 选择计算设备
         device = select_device(self.yolov5['device'])
-        print(device)
         # 如果是GPU则使用半精度浮点数 F16
         is_half = device.type != 'cpu'
         # 载入模型

@@ -119,8 +119,8 @@ catkin_package(
 )
 
 catkin_install_python(PROGRAMS
-  src/yolo_sub.py
-  src/rstest.py
+  src/following.py
+  src/yolov5_deepsort.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

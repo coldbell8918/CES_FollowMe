@@ -11,11 +11,12 @@ def cmd_decision(linear,angular,x,y,depth):
     if depth>0.5: ## meter 
         if y>0:
             if y<0.3: # robot and human front
-                if x<0.6:
-                    if x>0.4:
-                        return 0,0
-                    else:
-                        return -linear,0
+                if x<0.6 and x>0.4:
+                    return 0,0
+
+                elif x<=0.4 and x==0:
+                    return -linear,0
+
                 else:            
                     return linear, 0
             else:
@@ -26,11 +27,12 @@ def cmd_decision(linear,angular,x,y,depth):
 
         else:
             if y>-0.3: # robot and human front
-                if x<0.6:
-                    if x>0.4:
-                        return 0,0
-                    else:
-                        return -linear,0
+                if x<0.6 and x>0.4:
+                    return 0,0          
+
+                elif x<=0.4 and x==0:                        
+                    return -linear,0
+
                 else:
                     return linear,0
             else:
@@ -41,5 +43,6 @@ def cmd_decision(linear,angular,x,y,depth):
     else:
         if depth <0.4:
             return 0,0
+            
         else:
             return -linear,0
