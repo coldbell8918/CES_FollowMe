@@ -42,6 +42,9 @@ def config_maker(file_path):
     config['init distance']={
         'init_dis' : '1.0',
     }
+
+    
+
     with open(file_path , 'w') as f:
         config.write(f)
     return config 

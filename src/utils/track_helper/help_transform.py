@@ -21,6 +21,7 @@ def data_transform(data,cam_lidar,type):
                 depth=round(crowd[i].pose.y,3) ## taken depth
                 x=round(pow(depth**2-y**2,0.5),3)
                 merge.append((x,y,depth))
+                
                 height=crowd[i].shape[0]
                 weight=crowd[i].shape[1]
                 dim=crowd[i].shape[2]

@@ -27,15 +27,13 @@
     </node>
 
     <!-- run camera tracking -->
-    <node pkg="human_following" type="yolov5_deepsort.py" name="yolov5_deepsort_node" output="screen">/>
+    <node pkg="human_following" type="yolov5_deepsort.py" name="yolov5_deepsort_node" output="screen"/>
    
     <!-- run following -->
     <node pkg="human_following" type="following.py" name="following_node"   output="screen"/>
   
   </group>
 
-    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find human_following)/rviz/r2.rviz"/>
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find human_following)/rviz/r2.rviz"/>
 
 </launch>
-+-+'
-'

@@ -26,8 +26,8 @@ import os
 
 pipeline = rs.pipeline()  # å®šä¹‰æµç¨‹pipeline
 config = rs.config()  # å®šä¹‰é…ç½®config
-config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 15)
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 15)
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 profile = pipeline.start(config)  # æµç¨‹å¼€å§‹
 align_to = rs.stream.color  # ä¸Žcoloræµå¯¹é½
 align = rs.align(align_to)
@@ -51,9 +51,6 @@ def get_aligned_images():
                          }'''
 
     depth_image = np.asanyarray(aligned_depth_frame.get_data())  # æ·±åº¦å›¾ï¼ˆé»˜è®¤16ä½ï¼‰
-    # depth_image_8bit = cv2.convertScaleAbs(depth_image, alpha=0.03)  # æ·±åº¦å›¾ï¼ˆ8ä½ï¼‰
-    # depth_image_3d = np.dstack(
-    #     (depth_image_8bit, depth_image_8bit, depth_image_8bit))  # 3é€šé“æ·±åº¦å›¾
     color_image = np.asanyarray(color_frame.get_data())  # RGBå›¾
 
     return intr, depth_intrin, color_image, depth_image, aligned_depth_frame
@@ -124,6 +121,7 @@ class YoloV5:
 
     @torch.no_grad()
     def detect(self, img, canvas=None, view_img=True):
+
         '''æ¨¡åž‹é¢„æµ‹'''
         img_resize = self.preprocessing(img)  # å›¾åƒç¼©æ”¾
         self.img_torch = torch.from_numpy(img_resize).to(self.device)  # å›¾åƒæ ¼å¼è½¬æ¢
@@ -141,7 +139,7 @@ class YoloV5:
 
         if view_img and canvas is None:  canvas = np.copy(img)
             
-        xyxy_list,conf_list ,class_id_list,crop_imgs = [],[],[],[]
+        xyxy_list ,class_id_list,crop_imgs = [],[],[]
         
         if det is not None and len(det):
             det[:, :4] = scale_coords(img_resize.shape[2:], det[:, :4], img.shape).round()
@@ -150,13 +148,13 @@ class YoloV5:
             confs = det[:, 4]
             clss = det[:, 5]
             outputs = self.deepsort.update(xywhs.cpu(), confs.cpu(), clss.cpu(), canvas)
+            
             for _, (output, conf) in enumerate(zip(outputs, confs)):
                 if int(output[5])==0:
                     class_id = int(output[5])
                     xyxy_list.append(output[0:4])
-                    conf_list.append(conf)
                     class_id_list.append(output[4])
-                    label = f'{int(output[5])} {self.names[class_id]} {conf:.2f}'
+                    label = f'{int(output[4])} {self.names[class_id]} {conf:.2f}'
                     self.plot_one_box(output[0:4], canvas, label=label, color=self.colors[class_id], line_thickness=3)
                     xyxy=torch.tensor(output[0:4]).view(-1, 4)
                     b = xyxy2xywh(xyxy)        
@@ -165,7 +163,8 @@ class YoloV5:
                     clip_boxes(xyxy, canvas.shape)
                     crop = canvas[int(xyxy[0, 1]):int(xyxy[0, 3]), int(xyxy[0, 0]):int(xyxy[0, 2]), ::(1)]
                     crop_imgs.append(crop)   
-        return canvas, class_id_list, xyxy_list, conf_list,crop_imgs
+            # print(time.time()-ss)
+        return canvas, class_id_list, xyxy_list,crop_imgs
 
     def plot_one_box(self, x, img, color=None, label=None, line_thickness=None):
         ''''ç»˜åˆ¶çŸ©å½¢æ¡†+æ ‡ç­¾'''
@@ -201,13 +200,13 @@ def pub( list_1, list_2,data):
             person.id = list_2.pop(0)
             person.is_reconize = True
 
-            _crop=np.array(data.pop(0)).astype(np.uint8)  
-            height,weight,dim=_crop.shape
-            _crop=_crop.flatten()
-            person.shape.append(height)
-            person.shape.append(weight)
-            person.shape.append(dim)
-            person.crops=_crop
+            # _crop=np.array(data.pop(0)).astype(np.uint8)  
+            # height,weight,dim=_crop.shape
+            # _crop=_crop.flatten()
+            # person.shape.append(height)
+            # person.shape.append(weight)
+            # person.shape.append(dim)
+            # person.crops=_crop
             crowd.persons.append(person)
 
     crowd.header.stamp = rospy.Time.now()
@@ -223,6 +222,7 @@ def image_pub(data):
     
 
 
+# input hz , main : how to use 
 
 if __name__ == '__main__':
     
@@ -239,12 +239,15 @@ if __name__ == '__main__':
 
     try:
         while not rospy.is_shutdown():
+            start=time.time()
+
             intr, depth_intrin, color_image, depth_image, aligned_depth_frame = get_aligned_images()  # èŽ·å–å¯¹é½çš„å›¾åƒä¸Žç›¸æœºå†…å‚
+            
             if not depth_image.any() or not color_image.any():
                 rospy.sleep(0.01)
                 continue
 
-            canvas, class_id_list, xyxy_list, conf_lis,crop_imgs= model.detect(color_image)
+            canvas, class_id_list, xyxy_list,crop_imgs= model.detect(color_image)
            
             new_class_id_list,pub_axis_list=list(),list()
             try:
@@ -265,11 +268,12 @@ if __name__ == '__main__':
                         #             [225, 255, 255], thickness=2, lineType=cv2.LINE_AA)#æ ‡å‡ºåæ ‡
             except:
                 pass
-            ### pub_axis_list, pub_id_list,class_id_list
             # [[x,z], [id], [class(0/1)]]
             pub( pub_axis_list, new_class_id_list,crop_imgs)
             image_pub(canvas)
-            rospy.sleep(0.005)
+            print(time.time()-start)
+
+            rospy.sleep(0.01)
 
     finally:
         # Stop streaming

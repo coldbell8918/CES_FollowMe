@@ -7,9 +7,10 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1/Frames1
+        - /sensor_data1/scan_filtered1
         - /sensor_data1/pcl1
       Splitter Ratio: 0.5
-    Tree Height: 389
+    Tree Height: 363
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -55,90 +56,31 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: true
     - Class: rviz/TF
-      Enabled: true
+      Enabled: false
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        map:
-          Value: true
-        r2/base_footprint:
-          Value: true
-        r2/base_link:
-          Value: false
-        r2/base_scan:
-          Value: false
-        r2/camera_link:
-          Value: false
-        r2/camera_rgb_frame:
-          Value: false
-        r2/camera_rgb_optical_frame:
-          Value: false
-        r2/caster_back_left_link:
-          Value: false
-        r2/caster_back_right_link:
-          Value: false
-        r2/imu_link:
-          Value: false
-        r2/odom:
-          Value: true
-        r2/wheel_left_link:
-          Value: false
-        r2/wheel_right_link:
-          Value: false
       Marker Scale: 3
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        map:
-          r2/odom:
-            r2/base_footprint:
-              r2/base_link:
-                r2/base_scan:
-                  {}
-                r2/camera_link:
-                  r2/camera_rgb_frame:
-                    r2/camera_rgb_optical_frame:
-                      {}
-                r2/caster_back_left_link:
-                  {}
-                r2/caster_back_right_link:
-                  {}
-                r2/imu_link:
-                  {}
-                r2/wheel_left_link:
-                  {}
-                r2/wheel_right_link:
-                  {}
+        {}
       Update Interval: 0
-      Value: true
+      Value: false
     - Class: rviz/Group
       Displays:
         - Alpha: 0.699999988079071
           Class: rviz/Map
           Color Scheme: costmap
           Draw Behind: false
-          Enabled: true
-          Name: Map
-          Topic: /r2/move_base/global_costmap/costmap
-          Unreliable: false
-          Use Timestamp: false
-          Value: true
-      Enabled: false
-      Name: global_cost
-    - Class: rviz/Group
-      Displays:
-        - Alpha: 0.699999988079071
-          Class: rviz/Map
-          Color Scheme: costmap
-          Draw Behind: false
-          Enabled: true
+          Enabled: false
           Name: Map
           Topic: /r2/move_base/local_costmap/costmap
           Unreliable: false
           Use Timestamp: false
-          Value: true
+          Value: false
         - Alpha: 1
           Class: rviz/Polygon
           Color: 25; 255; 0
@@ -260,8 +202,8 @@ Visualization Manager:
           Axis: Z
           Channel Name: intensity
           Class: rviz/LaserScan
-          Color: 255; 255; 255
-          Color Transformer: Intensity
+          Color: 92; 53; 102
+          Color Transformer: FlatColor
           Decay Time: 0
           Enabled: true
           Invert Rainbow: false
@@ -272,7 +214,7 @@ Visualization Manager:
           Queue Size: 10
           Selectable: true
           Size (Pixels): 3
-          Size (m): 0.009999999776482582
+          Size (m): 0.10000000149011612
           Style: Flat Squares
           Topic: /r2/scan_filtered
           Unreliable: false
@@ -401,17 +343,30 @@ Visualization Manager:
       Enabled: true
       Name: teb
     - Class: rviz/Marker
-      Enabled: true
+      Enabled: false
       Marker Topic: /r2/visualization_marker
       Name: Marker
       Namespaces:
-        LEGS: true
-        objects_tracked: true
+        {}
       Queue Size: 100
-      Value: true
+      Value: false
+    - Class: rviz/Group
+      Displays:
+        - Alpha: 0.699999988079071
+          Class: rviz/Map
+          Color Scheme: costmap
+          Draw Behind: false
+          Enabled: true
+          Name: Map
+          Topic: /r2/move_base/global_costmap/costmap
+          Unreliable: false
+          Use Timestamp: false
+          Value: true
+      Enabled: true
+      Name: global_cost
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /track/image
+      Image Topic: /r2/track/image
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -421,6 +376,18 @@ Visualization Manager:
       Transport Hint: raw
       Unreliable: false
       Value: true
+    - Class: rviz/Image
+      Enabled: false
+      Image Topic: /r2/track/image
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Unreliable: false
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -449,35 +416,35 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 32.57285690307617
+      Distance: 27.13741683959961
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -6.221512317657471
-        Y: -4.722409248352051
-        Z: 0.005379235837608576
+        X: -0.07347142696380615
+        Y: 4.547916889190674
+        Z: 7.335748672485352
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 1.5647963285446167
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.4603979587554932
+      Yaw: 3.1385841369628906
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1023
+  Height: 1025
   Hide Left Dock: false
   Hide Right Dock: true
   Image:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001e500000361fc020000000afb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d00000210000000c900fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007301000002530000007e0000005c00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d0061006700650100000388000000160000000000000000fb0000000a0049006d00610067006501000002d7000000c70000001600ffffff000000010000010f00000363fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000363000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004f30000003efc0100000002fb0000000800540069006d00650100000000000004f3000002eb00fffffffb0000000800540069006d00650100000000000004500000000000000000000003080000036100000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000400000000000001e5000003cefc020000000bfb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc0000003d000001fb0000000000fffffffaffffffff0100000002fb0000000a0049006d0061006700650000000000ffffffff0000005e00fffffffb000000100044006900730070006c0061007900730000000000000001e50000015600fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007300000001370000005c0000005c00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d0061006700650100000016000003ce0000001600fffffffb0000000a0049006d00610067006501000002d9000000c70000000000000000fb0000000a0049006d006100670065030000023600000077000002b100000241000000010000010f00000363fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000003d00000363000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005000000003efc0100000002fb0000000800540069006d0065000000000000000500000004f300fffffffb0000000800540069006d0065010000000000000450000000000000000000000595000003ce00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730000000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -486,6 +453,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 1267
-  X: 139
+  Width: 1920
+  X: 0
   Y: 27

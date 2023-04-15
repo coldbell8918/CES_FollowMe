@@ -31,9 +31,6 @@ class DeepSort(object):
             confidences) if conf > self.min_confidence]
 
         # run on non-maximum supression
-        boxes = np.array([d.tlwh for d in detections])
-        scores = np.array([d.confidence for d in detections])
-
         # update tracker
         self.tracker.predict()
         self.tracker.update(detections, classes)

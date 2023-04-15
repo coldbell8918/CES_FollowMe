@@ -141,7 +141,7 @@ class TFBottleneckCSP(keras.layers.Layer):
         super(TFBottleneckCSP, self).__init__()
         c_ = int(c2 * e)  # hidden channels
         self.cv1 = TFConv(c1, c_, 1, 1, w=w.cv1)
-        self.cv2 = TFConv2d(c1, c_, 1, 1, bias=False, w=w.cv2)
+        self.2 = TFConv2d(c1, c_, 1, 1, bias=False, w=w.cv2)
         self.cv3 = TFConv2d(c_, c_, 1, 1, bias=False, w=w.cv3)
         self.cv4 = TFConv(2 * c_, c2, 1, 1, w=w.cv4)
         self.bn = TFBN(w.bn)
@@ -160,7 +160,7 @@ class TFC3(keras.layers.Layer):
         # ch_in, ch_out, number, shortcut, groups, expansion
         super(TFC3, self).__init__()
         c_ = int(c2 * e)  # hidden channels
-        self.cv1 = TFConv(c1, c_, 1, 1, w=w.cv1)
+        self.cv1 = TFConv(c1, c_, 1, 1, w=w.1)
         self.cv2 = TFConv(c1, c_, 1, 1, w=w.cv2)
         self.cv3 = TFConv(2 * c_, c2, 1, 1, w=w.cv3)
         self.m = keras.Sequential([TFBottleneck(c_, c_, shortcut, g, e=1.0, w=w.m[j]) for j in range(n)])
